@@ -1,0 +1,19 @@
+SELECT
+
+select * from customers where id = 1 order by first-name
+
+select frist-name , last-name , average * 10 as moadel from customers
+
+select distinct state from customers 
+
+select * from customers where birth-date > "2020-10-2"
+
+select * from customers where (points > 1000 and state = "VA") or state = "CA"
+
+select * from order where order-item = 1 and quantity * price > 30 
+
+where state = "VA" or state = "CA" or state = "ML" 
+-----> where state in ("CA","VA","ML")
+
+select * from customers where points between (1000 , 3000)
+select * from customers where birth-date between ("1990-10-10" , "2020-01-01")
