@@ -1,0 +1,46 @@
+SELECT
+
+select * from customers where id = 1 order by first-name
+
+aliases:
+select frist-name , last-name , average * 10 as moadel from customers
+
+distinct:
+select distinct state from customers 
+
+(<,> ,!= , <>)operator :
+select * from customers where birth-date > "2020-10-2"
+
+(and,or) operator:
+select * from customers where (points > 1000 and state = "VA") or state = "CA"
+select * from order where order-item = 1 and quantity * price > 30 
+
+in operator :
+where state = "VA" or state = "CA" or state = "ML" 
+-----> where state in ("CA","VA","ML")
+
+between operator :
+select * from customers where points between 1000 and 30000
+select * from customers where birth-date between "1990-10-10" and "2020-01-01"
+
+like operator : 
+% represents any number of characters
+_ represents single character
+
+select * from customers where 
+address like "%abad%" or address like "%rey" or phone like "%9"
+
+regex :
+select * from customers where regexp "[a-h]e"
+
+is null :
+select * from customers where phone is null / is not null
+
+order by :
+select * , quantity * price as total-price order by total-price DESC
+
+limit offset :
+select * from customers order by balance limit 3 offset 5 (5,3)
+
+
+
