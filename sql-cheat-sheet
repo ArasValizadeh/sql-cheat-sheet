@@ -1,11 +1,11 @@
 SELECT:
-
 select * from customers where id = 1 order by first-name
 
 aliases:
 select first-name , last-name , average * 10 as model from customers
 
 distinct:
+# it would not assess and show duplicate rows
 select distinct state from customers 
 
 (<,> ,!= , <>)operator :
@@ -51,7 +51,7 @@ select * from students inner join parents on students.Id = parents.studentId
 join from another database :
 select * from students s inner join anotherDatabase.Parents ap on s.id = ap.id
 
-## "USE" said that on which database you are working --> use public select * from .....
+## "USE" said that on which database you are working --> use public \n select * from .....
 
 join a table with itself :
 select e.firstname , e.lastname , e.reports_to , m.employeeId as manager from employee e join employee m on e.report_to = m.employee_id
@@ -62,7 +62,28 @@ join customers c on o.customer_id = c.customer_id
 join status s on o.status_id = s.status_id
 
 compound join item :
+## most of the time we use it when we do not have primary keys or 1 primary key
 select * from order_item oi
 join order_items_notes oin
 on oi.product_id = oin.product_id and oi.order_id = oin.oi.order_id
+
+outer join (left/right):
+## it's fetch all data's from right or left table where ON condition happen or not
+select * from customers c left join orders o on c.customer_id = o.customer_id (left --> customer)
+select * from customers c right join orders o on c.customer_id = o.customer_id (right --> orders)
+
+natural join :
+## query provide on condition automatically
+select * from customers natural join orders
+
+cross join :
+## it's mapped all rows in customer to orders
+select * from customers cross join orders == select * from customers , orders
+
+union :
+## combine 2 queries with each other
+select * , "Active" as status from orders where order_date >= '2020-01-01' union select * , 'Archived' as status
+from orders where order_date < '2020-01-01'
+## they have to same columns
+select x column from customers union select x column from orders
 
