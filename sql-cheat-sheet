@@ -87,3 +87,33 @@ from orders where order_date < '2020-01-01'
 ## they have to same columns
 select x column from customers union select x column from orders
 
+---------------------------------------------------------------------------------------------
+INSERT :
+
+insert :
+insert into customers (lastname , firstname ,phone) values ("Valizadeh", "Aras" , "091244874192")
+
+insert multiple rows :
+insert into customers (lastname) values ("Moraveji"),("Valizadeh"),("Rostambeygi")
+
+copy a table :
+create table orders_copy as select * from orders (after AS is a sub query)
+(just specific rows) create table copy as select * from orders where points > 40 (after AS is a sub query)
+
+update a row in table :
+update customers set payment_total = invoice_total * 0.5 where firstname = "Aras"
+update customers set point = point + 50 where born-date < '2020-01-01'
+
+update multiple rows in table :
+update customers set ... where id in (1,2,3,4,5,9) / id between 100 and 400
+## with sub query --> update customers set .... where id in (select customer_id from customers where state in ("CA","VF","ML"))
+
+delete :
+delete a row :
+delete from orders where order_id = (select * from clients where name = "example")
+
+aggregate functions :
+## these functions will not consider null values
+select max(total_income) , min(total_income) , avg(total-income * 1.1) , sum(...) , count(...) from employee
+## if you want to consider all data as well null values --> count(*) as all_records
+
