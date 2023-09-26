@@ -1,9 +1,9 @@
-SELECT
+SELECT:
 
 select * from customers where id = 1 order by first-name
 
 aliases:
-select frist-name , last-name , average * 10 as moadel from customers
+select first-name , last-name , average * 10 as model from customers
 
 distinct:
 select distinct state from customers 
@@ -42,5 +42,27 @@ select * , quantity * price as total-price order by total-price DESC
 limit offset :
 select * from customers order by balance limit 3 offset 5 (5,3)
 
+-----------------------------------------------------------------
+JOIN:
 
+inner join :
+select * from students inner join parents on students.Id = parents.studentId
+
+join from another database :
+select * from students s inner join anotherDatabase.Parents ap on s.id = ap.id
+
+## "USE" said that on which database you are working --> use public select * from .....
+
+join a table with itself :
+select e.firstname , e.lastname , e.reports_to , m.employeeId as manager from employee e join employee m on e.report_to = m.employee_id
+
+join on multiple tables :
+select * from orders o
+join customers c on o.customer_id = c.customer_id
+join status s on o.status_id = s.status_id
+
+compound join item :
+select * from order_item oi
+join order_items_notes oin
+on oi.product_id = oin.product_id and oi.order_id = oin.oi.order_id
 
