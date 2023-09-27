@@ -46,10 +46,12 @@ select * from customers order by balance limit 3 offset 5 (5,3)
 JOIN:
 
 inner join :
-select * from students inner join parents on students.Id = parents.studentId
+select * from students join parents on students.Id = parents.studentId
 
 join from another database :
-select * from students s inner join anotherDatabase.Parents ap on s.id = ap.id
+select * from students s join anotherDatabase.Parents ap on s.id = ap.id
+
+select * from students join parents on students.id = parents.student_id
 
 ## "USE" said that on which database you are working --> use public \n select * from .....
 
@@ -116,4 +118,19 @@ aggregate functions :
 ## these functions will not consider null values
 select max(total_income) , min(total_income) , avg(total-income * 1.1) , sum(...) , count(...) from employee
 ## if you want to consider all data as well null values --> count(*) as all_records
+
+group by :
+select client_id , sum(sales) as total_sales from customers group by client_id
+select state , city , sum (sales) as total_sales from invoices join clients group by state , city
+
+order of sql commands : select - from - join - where - group by - having
+
+having :
+## when we use group by we can not use that element we grouped it , so we have to use having command after group by cluase 
+## you can mention columns of select in the group by but you can use all of columns in where 
+select city , state , sum (sales) as total_sales from invoices join clients group by client_id , state having total_sales > 5000
+
+with roll up :
+## it`s used when we want to set a row that represnts our function without considering group by clause
+select city , sum (sales) as total_sales from invoices group by city ,state with rollup
 
