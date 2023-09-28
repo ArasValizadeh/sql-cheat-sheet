@@ -79,7 +79,7 @@ natural join :
 select * from customers natural join orders
 
 cross join :
-## it's mapped all rows in customer to orders
+## it mapped all rows in customer to orders
 select * from customers cross join orders == select * from customers , orders
 
 union :
@@ -130,7 +130,31 @@ having :
 ## you can mention columns of select in the group by but you can use all of columns in where 
 select city , state , sum (sales) as total_sales from invoices join clients group by client_id , state having total_sales > 5000
 
-with roll up :
-## it`s used when we want to set a row that represnts our function without considering group by clause
+with roll up (mysql) :
+## it used when we want to set a row that represnts our function without considering group by clause
 select city , sum (sales) as total_sales from invoices group by city ,state with rollup
 
+
+sub query :
+## sub queries can be a single value or a table :
+select * from customers where salary > (select avg(salary) from customer)
+## sub queries has more readablity and less performance 
+
+All :
+## is used to determine the max value of a rangs of number 
+select * from employees where salary > All (select invoice_total from invoices )
+
+Any :
+## is used set equality with multiple values
+select * from customers where customer_id = Any (select customer_id from invoices group by customer_id having count(*) >= 2)
+
+correlated sub queries :
+## make a refrence which is in out of sub queries and is used inside of sub query 
+select * from employee e where salary > (select AVG(salary) from employee where e.office_id = office_id)
+
+Exist :
+## is used when we want to know that a refrence in primary query is exist in sub query 
+select * from customers c where Exist (select customer_id from invoices where customer_id = c.id)
+
+sub query in the select clause :
+select invoice_id , invoice_total , (select AVG(invoice_total) from invoices) from invoices
