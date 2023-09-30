@@ -1,107 +1,101 @@
 SELECT:
+
+
 select * from customers where id = 1 order by first-name
 
-aliases:
+ALIASES:
 select first-name , last-name , average * 10 as model from customers
 
-distinct:
-# it would not assess and show duplicate rows
+DISTINCT:
+## it would not assess and show duplicate rows
 select distinct state from customers 
 
-(<,> ,!= , <>)operator :
-select * from customers where birth-date > "2020-10-2"
-
-(and,or) operator:
+(<,> ,!= , <> , and,or)operators :
+select * from customers where rth-date > "2020-10-2"
 select * from customers where (points > 1000 and state = "VA") or state = "CA"
 select * from order where order-item = 1 and quantity * price > 30 
 
-in operator :
+IN :
 where state = "VA" or state = "CA" or state = "ML" 
 -----> where state in ("CA","VA","ML")
 
-between operator :
+BETWEEN :
 select * from customers where points between 1000 and 30000
 select * from customers where birth-date between "1990-10-10" and "2020-01-01"
 
-like operator : 
-% represents any number of characters
-_ represents single character
-
+LIKE :
+## % represents any number of characters and _ represents single character
 select * from customers where 
 address like "%abad%" or address like "%rey" or phone like "%9"
 
-regex :
+REGEXP :
 select * from customers where regexp "[a-h]e"
 
-is null :
+IS NULL :
 select * from customers where phone is null / is not null
 
-order by :
+ORDER BY :
 select * , quantity * price as total-price order by total-price DESC
 
-limit offset :
+LIMIT OFFSET :
 select * from customers order by balance limit 3 offset 5 (5,3)
+
+UNION :
+## combine 2 queries with each other they have to same number of columns
+select * , "Active" as status from orders where order_date >= '2020-01-01'
+union
+select * , 'Archived' as status
+from orders where order_date < '2020-01-01'
 
 -----------------------------------------------------------------
 JOIN:
 
-inner join :
-# it retrieves only rows which has condition
+
+INNER JOIN:
+## it retrieves only rows which has condition
 select * from students join parents on students.Id = parents.studentId
 
-join from another database :
+JOIN from another database :
 select * from students s join anotherDatabase.Parents ap on s.id = ap.id
 
-select * from students join parents on students.id = parents.student_id
-
-## "USE" said that on which database you are working --> use public \n select * from ..... (mysql)
-
-join a table with itself :
+JOIN a table with itself :
 select e.firstname , e.lastname , e.reports_to , m.employeeId as manager from employee e join employee m on e.report_to = m.employee_id
 
-join on multiple tables :
+JOIN on multiple tables :
 select * from orders o
 join customers c on o.customer_id = c.customer_id
 join status s on o.status_id = s.status_id
 
-compound join item :
+COMPOUND JOIN :
 ## most of the time we use it when we do not have primary keys or 1 primary key
 select * from order_item oi
 join order_items_notes oin
 on oi.product_id = oin.product_id and oi.order_id = oin.oi.order_id
 
-outer join (left/right):
-## it's fetch all data's from right or left table where ON condition happen or not
+OUTER JOIN (LEFT / RIGHT):
+## it retrieves all data from right or left table where ON condition happen or not
 select * from customers c left join orders o on c.customer_id = o.customer_id (left --> customer)
 select * from customers c right join orders o on c.customer_id = o.customer_id (right --> orders)
 
-natural join :
+NATURAL JOIN:
 ## query provide on condition automatically
 select * from customers natural join orders
 
-cross join :
+CROSS JOIN:
 ## it mapped all rows in customer to orders
 select * from customers cross join orders ==> select * from customers , orders
-
-union :
-## combine 2 queries with each other
-select * , "Active" as status from orders where order_date >= '2020-01-01' union select * , 'Archived' as status
-from orders where order_date < '2020-01-01'
-## they have to same number of columns
-select x column from customers union select x column from orders
 
 ---------------------------------------------------------------------------------------------
 INSERT :
 
-insert :
+
+INSERT :
 insert into customers (lastname , firstname ,phone) values ("Valizadeh", "Aras" , "091244874192")
 
-insert multiple rows :
+INSERT multiple rows :
 insert into customers (lastname) values ("Moraveji"),("Valizadeh"),("Rostambeygi")
 
-
 ---------------------------------------------------------------------------------------------
-
 copy a table :
 create table orders_copy as select * from orders (after AS is a sub query)
 (just specific rows) create table copy as select * from orders where points > 40 (after AS is a sub query)
@@ -109,161 +103,143 @@ create table orders_copy as select * from orders (after AS is a sub query)
 ---------------------------------------------------------------------------------------------
 UPDATING :
 
+
 update a row in table :
 update customers set payment_total = invoice_total * 0.5 where firstname = "Aras"
 update customers set point = point + 50 where born-date < '2020-01-01'
-
-update multiple rows in table :
 update customers set ... where id in (1,2,3,4,5,9) / id between 100 and 400
-## with sub query --> update customers set .... where id in (select customer_id from customers where state in ("CA","VF","ML"))
-
+update customers set .... where id in (select customer_id from customers where state in ("CA","VF","ML"))
 
 ---------------------------------------------------------------------------------------------
 DELETE :
+
 
 delete a row :
 delete from orders where order_id = (select * from clients where name = "example")
 
 ---------------------------------------------------------------------------------------------
+AGGREGATES :
 
-aggregate functions :
-## these functions will not consider null values
-select max(total_income) , min(total_income) , avg(total-income * 1.1) , sum(...) , count(...) from employee
+
+## these functions do not consider null values
 ## if you want to consider all data as well null values --> count(*) as all_records
+select max(total_income) , min(total_income) , avg(total-income * 1.1) , sum(...) , count(...) from employee
 
 ---------------------------------------------------------------------------------------------
+GROUP BY :
 
-group by :
 
 select client_id , sum(sales) as total_sales from customers group by client_id
 select state , city , sum (sales) as total_sales from invoices join clients group by state , city
 
 ---------------------------------------------------------------------------------------------
+HAVING :
 
-order of sql commands : select - from - join - where - group by - having
 
----------------------------------------------------------------------------------------------
-
-having :
-## when we use group by we can not use that element we grouped it , so we have to use having command after group by clause
 ## is used to filter the result set after grouping and aggregation have been applied. It filters groups or aggregated values.
 select city , state , sum (sales) as total_sales from invoices join clients group by client_id , state having total_sales > 5000
 
-
 ---------------------------------------------------------------------------------------------
+SUB QUERY :
 
 
-with roll up (mysql) :
-## it used when we want to set a row that represents our function without considering group by clause
-select city , sum (sales) as total_sales from invoices group by city ,state with rollup
-
-
----------------------------------------------------------------------------------------------
-
-
-sub query :
-## sub queries can be a single value or a table :
+## sub queries can be a single value or a table
 select * from customers where salary > (select avg(salary) from customer)
-## sub queries has more readability and less performance
+select * from customers where id in (select customer_id from invoices where payment > 5000)
 
+CORRELATED SUB QUERY:
+## make a reference which is in out of sub queries and is used inside of sub query
+select * from employee e where salary > (select AVG(salary) from employee where e.office_id = office_id)
+
+SUB QUERY in the SELECT clause:
+select invoice_id , invoice_total , (select AVG(invoice_total) from invoices) from invoices
 
 ---------------------------------------------------------------------------------------------
-
 All :
-## is used to determine the max value of a ranges of number
+
+
+## is used to determine the max value of a range of numbers
 select * from employees where salary > All (select invoice_total from invoices )
 
-
 ---------------------------------------------------------------------------------------------
-
 Any :
+
+
 ## is used set equality with multiple values
 select * from customers where customer_id = Any (select customer_id from invoices group by customer_id having count(*) >= 2)
 select * from customers where customer_id > Any (select customer_id from invoices group by customer_id having count(*) >= 2)
 
 ---------------------------------------------------------------------------------------------
-
-correlated sub queries :
-## make a reference which is in out of sub queries and is used inside of sub query
-select * from employee e where salary > (select AVG(salary) from employee where e.office_id = office_id)
-
----------------------------------------------------------------------------------------------
-Exist : (mysql)
-## is used when we want to know that a reference in primary query is exist in sub query
-select * from customers c where Exist (select customer_id from invoices where customer_id = c.id)
-
----------------------------------------------------------------------------------------------
-
-sub query in the select clause :
-select invoice_id , invoice_total , (select AVG(invoice_total) from invoices) from invoices
-
----------------------------------------------------------------------------------------------
-create enum :
+creating ENUM :
 create type week as enum ("Mon" , "Tue" , ...)
 
 ---------------------------------------------------------------------------------------------
-USE FULL FUNCTIONS :
+USEFUL FUNCTIONS :
 
-string functions : lower , upper , trim , ....
+
+string functions : lower , upper , trim ,length , ascii , concat  ....
 number functions : abs , round , ....
-date functions : now() , current-date , current-time , YEAR(now()) ,extract (year from now())
+date functions : now() , current-date , current-time  ,extract (year from now())
 
 ---------------------------------------------------------------------------------------------
 COALESCE :
-# it used to say something else instead a null value
+
+
+## it used to say something else instead a null value
 select coalesce(email , 'not inserted email') from students
 
 ---------------------------------------------------------------------------------------------
 CASE :
-# it used to write if conditions in select clause
+
+
+## it used to write if conditions in SELECT clause
 SELECT CASE
            WHEN EXTRACT(SECOND FROM NOW()) % 2 >= 1 THEN 'Odd'
            WHEN EXTRACT(SECOND FROM NOW()) % 2 < 1 THEN 'Even'
            ELSE ...
-           END AS category;
+       END AS category;
 
 ---------------------------------------------------------------------------------------------
 VIEW : (virtual table)
-# it used to create a name for query which it can be use a lot of time
+
+
+## it used to create a name for query which it can be use a lot of time
 create view moadelA as select "FirstName" , "LastName" , "Students"."Id" from "Students" where "Average" > 17 ;
 select * from moadelA;
 
 ---------------------------------------------------------------------------------------------
-
 PROCEDURES :
-# sorting your queries
-# call / execute procedures_name();
-# procedures uses for transactions (commit; , return;) but you cant use transactions in functions
 
+
+## sorting your queries
+## call / execute procedures_name()
+## procedures uses for transactions (commit; , return;) but you cant use transactions in functions
 create or replace procedure transfer(
-   sender int,
-   receiver int,
-   amount dec
+    sender uuid,
+    receiver uuid,
+    amount dec
 )
-language plpgsql
+    language plpgsql
 as $$
 begin
-    -- subtracting the amount from the sender's account
-    update accounts
-    set balance = balance - amount
-    where id = sender;
-
-     if block ---> :(
-     IF (0 > 4) THEN select * from "Students" where "LastName" = lastname ;
-     end IF ;
-     )
-
-    -- adding the amount to the receiver's account
-    update accounts
-    set balance = balance + amount
-    where id = receiver;
-
-    commit;
-end;$$
+    IF (select "Average" from "Students" where "Id" = sender ) - amount >= 0 and (select "Average" from "Students" where "Id" = receiver) + amount <= 20
+        THEN
+        start transaction ;
+        update "Students"
+        set "Average" = "Average" - amount
+        where "Id" = sender;
+        update "Students"
+        set "Average" = "Average" + amount
+        where "Id" = receiver;
+        commit  ;
+    end IF ;
+end;
+$$;
 
 
 ---------------------------------------------------------------------------------------------
 FUNCTIONS :
+
 
 pattern :
 create [or replace] function function_name(param_list)
@@ -281,7 +257,7 @@ $$
 
 example :
 
-CREATE OR REPLACE FUNCTION insert_students1(
+CREATE OR REPLACE FUNCTION insert_students(
     firstname varchar(30),
     lastname varchar(30),
     average float4 DEFAULT 0.0
@@ -319,9 +295,10 @@ $$;
 
 ---------------------------------------------------------------------------------------------
 TRIGGERS :
-# block of codes which is execute after or before a sql statements
 
-example one :
+
+## block of codes which is execute after or before a sql statements
+example one : (example two is better)
 create or replace procedure parentAddLastName(lastname varchar(30) , studentId uuid)
 language plpgsql
 as
@@ -359,7 +336,7 @@ $$ LANGUAGE plpgsql;
 
 -- Create a trigger that calls the trigger function when a row is updated
 CREATE or replace TRIGGER update_timestamp_trigger
-    BEFORE UPDATE ON "Students"
+    AFTER UPDATE ON "Students"
     FOR EACH ROW
 EXECUTE FUNCTION update_timestamp();
 
@@ -372,10 +349,37 @@ update "Students" set "Average" = "Average" + 0.2 where "LastName" = 'STONES' ;
 commit ;
 
 you can set isolation level on transactions :
--- Set the isolation level to SERIALIZABLE
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
--- Check the current isolation level
+## Check the current isolation level
 SHOW transaction_isolation;
 
 ---------------------------------------------------------------------------------------------
+DATE FUNCTIONS :
+
+## adding date with some data :
+select date '2001-10-5' + integer '3' as example ---> 2001-10-8
+select date '2001-10-5' + interval '3 hour' as example ---> 2001-10-05 03:00:00.000000
+select timestamp '2001-09-28 01:00' + interval '23 hours' --->  2001-09-29 00:00:00
+select date '2001-10-01' - date '2001-09-28' --->  '3' (days)
+select double precision '3.5' * interval '1 hour' ---> interval '03:30:00'
+
+AGE :
+select age(timestamp '2004-03-11') ----> 19 years 6 mons 19 days 0 hours
+
+## CURRENT_DATE/CURRENT_TIME/CURRENT_TIMESTAMP/NOW() ---> return current time
+
+DATE_PART / EXTRACT:
+
+select date_part('day', TIMESTAMP '2001-02-16 20:38:40') ---> 16
+select extreact(hour from timestamp '2001-02-16 20:38:40'); ---> 20
+
+
+---------------------------------------------------------------------------------------------
+
+
+order of sql commands : select - from - join - where - group by - having
+
+
+
+FINISH GOOD LUCK :D
